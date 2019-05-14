@@ -1,9 +1,8 @@
 from scrapy import Spider
 from nyt_scraper.items import HeadlineItem
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from time import sleep
-
-ITER = 10000
 
 
 class ArchivesSpider(Spider):
@@ -11,7 +10,10 @@ class ArchivesSpider(Spider):
     start_urls = ['https://www.nytimes.com/search/?srchst=nyt']
 
     def __init__(self):
-        self.driver = webdriver.Chrome()
+        ITER = 10000
+        self.options = Options()
+        self.options.headless = True
+        self.driver = webdriver.Chrome(options=self.options)
 
     def itemize(self, element):
         item = HeadlineItem()
@@ -31,12 +33,11 @@ class ArchivesSpider(Spider):
         return item
 
     def parse(self, response):
-        self.driver.get(response.url)  # /items/item[position() >= last() - 2]
+        self.driver.get(response.url)
 
         for i in range(10):
             headlines = self.driver.find_elements_by_xpath(
                 '//*[@data-testid="search-results"]/li[@data-testid="search-bodega-result"][position() >= last() - 9]')
-            # self.log(headlines)
             for headline in headlines:
                 yield self.itemize(headline)
 
