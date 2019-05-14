@@ -10,7 +10,6 @@ class ArchivesSpider(Spider):
     start_urls = ['https://www.nytimes.com/search/?srchst=nyt']
 
     def __init__(self):
-        ITER = 10000
         self.options = Options()
         self.options.headless = True
         self.driver = webdriver.Chrome(options=self.options)
@@ -35,7 +34,7 @@ class ArchivesSpider(Spider):
     def parse(self, response):
         self.driver.get(response.url)
 
-        for i in range(100000):
+        for _ in range(100000):
             headlines = self.driver.find_elements_by_xpath(
                 '//*[@data-testid="search-results"]/li[@data-testid="search-bodega-result"][position() >= last() - 9]')
             for headline in headlines:
