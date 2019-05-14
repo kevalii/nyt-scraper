@@ -35,7 +35,7 @@ class ArchivesSpider(Spider):
     def parse(self, response):
         self.driver.get(response.url)
 
-        for i in range(10):
+        for i in range(100000):
             headlines = self.driver.find_elements_by_xpath(
                 '//*[@data-testid="search-results"]/li[@data-testid="search-bodega-result"][position() >= last() - 9]')
             for headline in headlines:
@@ -43,7 +43,7 @@ class ArchivesSpider(Spider):
 
             next = self.driver.find_element_by_xpath(
                 '//*[@id="site-content"]/div/div[2]/div[2]/div/button')
-            sleep(0.3)
+            sleep(0.5)
 
             try:
                 next.click()
